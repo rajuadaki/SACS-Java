@@ -57,7 +57,7 @@ public class AuthenticationCall {
         messageConverters.add(new FormHttpMessageConverter());
         messageConverters.add(new MappingJackson2HttpMessageConverter());
         restTemplate.setMessageConverters(messageConverters);
-        AuthResponse authToken = restTemplate.postForObject(config.getRestProperty("endpoint") + "/v2/auth/token", requestEntity, AuthResponse.class);
+        AuthResponse authToken = restTemplate.postForObject(config.getRestProperty("environment") + "/v2/auth/token", requestEntity, AuthResponse.class);
         tokenHolder.resetToken(authToken);
         
     }

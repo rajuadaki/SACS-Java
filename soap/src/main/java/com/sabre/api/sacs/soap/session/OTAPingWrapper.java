@@ -54,7 +54,7 @@ public class OTAPingWrapper extends WebServiceGatewaySupport {
 	
 	public OTAPingRS executePing(Security sessionToPing) {
 		OTAPingRS result = new OTAPingRS();
-		this.setDefaultUri(configuration.getSoapProperty("endpoint"));
+		this.setDefaultUri(configuration.getSoapProperty("environment"));
 		this.pingHeaderCallback.setSessionToPing(sessionToPing);
 		this.setMarshaller(marshaller);
 		result = (OTAPingRS) this.getWebServiceTemplate().marshalSendAndReceive(generateRequest(), pingHeaderCallback);

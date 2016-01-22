@@ -43,7 +43,7 @@ public class BargainFinderMaxActivity implements Activity {
     @Override
     public Activity run(SharedContext context) {
         call.setRequest(generateRequest());
-        call.setUrl(config.getRestProperty("endpoint") + "/v1.8.6/shop/flights?mode=live");
+        call.setUrl(config.getRestProperty("environment") + "/v1.8.6/shop/flights?mode=live");
         BfmV186Response response = call.doCall(BfmV186Response.class, context);
         context.putResult("BargainFinderMaxResponse", response);
         return null;

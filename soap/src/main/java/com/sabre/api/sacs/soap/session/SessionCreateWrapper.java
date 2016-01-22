@@ -60,7 +60,7 @@ public class SessionCreateWrapper extends WebServiceGatewaySupport {
         interceptors.add(faultInterceptor);
 
         this.setInterceptors(interceptors.toArray(new ClientInterceptor[0]));
-        setDefaultUri(configuration.getSoapProperty("endpoint"));
+        setDefaultUri(configuration.getSoapProperty("environment"));
         setMarshaller(marshaller);
         setUnmarshaller(marshaller);
     }

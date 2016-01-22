@@ -48,7 +48,7 @@ public class SessionCloseWrapper extends WebServiceGatewaySupport {
         interceptors.add(sessionCloseInterceptor);
 
         this.setInterceptors(interceptors.toArray(new ClientInterceptor[0]));
-        setDefaultUri(configuration.getSoapProperty("endpoint"));
+        setDefaultUri(configuration.getSoapProperty("environment"));
         setMarshaller(marshaller);
         setUnmarshaller(marshaller);
     }

@@ -97,7 +97,7 @@ public abstract class GenericRequestWrapper<RQ, RS> extends WebServiceGatewaySup
         interceptors.add(faultInterceptor);
         interceptors.add(loggingInterceptor);
         this.setInterceptors(interceptors.toArray(new ClientInterceptor[0]));
-        this.setDefaultUri(configuration.getSoapProperty("endpoint"));
+        this.setDefaultUri(configuration.getSoapProperty("environment"));
         this.setMarshaller(marshaller());
         this.setUnmarshaller(marshaller());
     }

@@ -46,7 +46,7 @@ public class IgnoreTransactionWrapper extends WebServiceGatewaySupport {
         interceptors.add(faultInterceptor);
 
         this.setInterceptors(interceptors.toArray(new ClientInterceptor[0]));
-        setDefaultUri(configuration.getSoapProperty("endpoint"));
+        setDefaultUri(configuration.getSoapProperty("environment"));
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
         marshaller.setContextPath("com.sabre.api.sacs.contract.transaction");
         setMarshaller(marshaller);
