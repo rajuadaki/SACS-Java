@@ -116,7 +116,7 @@ public class PassengerDetailsActivity implements Activity {
         PassengerDetailsRQ.PostProcessing.EndTransactionRQ endTransactionRQ = new PassengerDetailsRQ.PostProcessing.EndTransactionRQ();
         PassengerDetailsRQ.PostProcessing.EndTransactionRQ.Source source = new PassengerDetailsRQ.PostProcessing.EndTransactionRQ.Source();
         PassengerDetailsRQ.PostProcessing.EndTransactionRQ.EndTransaction endTransaction = new PassengerDetailsRQ.PostProcessing.EndTransactionRQ.EndTransaction();
-        source.setReceivedFrom("SWSTesting");
+        source.setReceivedFrom("SACSTesting");
         endTransaction.setInd("true");
         endTransactionRQ.setSource(source);
         endTransactionRQ.setEndTransaction(endTransaction);
@@ -202,7 +202,7 @@ public class PassengerDetailsActivity implements Activity {
         personName1.setSurname("TEST"+RandomStringUtils.randomAlphabetic(4));
         customerInfo.getPersonName().add(personName1);
         travelItineraryAddInfoRQ.setCustomerInfo(customerInfo);
-        travelItineraryAddInfoRQ.setAgencyInfo(getAgencyInfo());
+        //travelItineraryAddInfoRQ.setAgencyInfo(getAgencyInfo());
 
         return travelItineraryAddInfoRQ;
     }

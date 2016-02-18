@@ -1,4 +1,4 @@
-package com.sabre.api.sacs.soap.passengerdetails;
+package com.sabre.api.sacs.soap.wrapper;
 
 import java.util.List;
 

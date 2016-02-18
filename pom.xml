@@ -61,6 +61,11 @@
 				<artifactId>spring-boot-starter-test</artifactId>
 				<version>1.2.5.RELEASE</version>
 			</dependency>
+			<dependency>
+				<groupId>net.sf.dozer</groupId>
+				<artifactId>dozer</artifactId>
+				<version>5.5.1</version>
+			</dependency>
 
 
 		</dependencies>

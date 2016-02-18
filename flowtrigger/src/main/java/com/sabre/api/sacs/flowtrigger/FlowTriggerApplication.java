@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Scope;
 import com.sabre.api.sacs.rest.RestApplicationConfiguration;
 import com.sabre.api.sacs.rest.activities.LeadPriceCalendarActivity;
 import com.sabre.api.sacs.soap.SoapApplicationConfiguration;
-import com.sabre.api.sacs.soap.orchestratedflow.PassengerDetailsActivity;
+import com.sabre.api.sacs.soap.orchestratedflow.BargainFinderMaxSoapActivity;
 import com.sabre.api.sacs.soap.pool.SessionPool;
 import com.sabre.api.sacs.workflow.Workflow;
 
@@ -52,7 +52,7 @@ public class FlowTriggerApplication {
 	@Bean
 	@Autowired
 	@Scope("prototype")
-	public Workflow orchestratedWorkflow(PassengerDetailsActivity activity) {
+	public Workflow orchestratedWorkflow(BargainFinderMaxSoapActivity activity) {//PassengerDetailsActivity activity) {
 		return new Workflow(activity);
 	}
 	

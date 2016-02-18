@@ -90,9 +90,9 @@ public abstract class GenericRequestWrapper<RQ, RS> extends WebServiceGatewaySup
     
     @PostConstruct
     private void init() {
-        List<ClientInterceptor> interceptors = new ArrayList<>();
-        if (interceptors() != null) {
-            interceptors.addAll(interceptors());
+        List<ClientInterceptor> interceptors = interceptors();
+        if (interceptors == null) {
+            interceptors = new ArrayList<>();
         }
         interceptors.add(faultInterceptor);
         interceptors.add(loggingInterceptor);

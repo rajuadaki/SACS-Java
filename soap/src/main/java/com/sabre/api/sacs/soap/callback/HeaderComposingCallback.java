@@ -1,7 +1,12 @@
 package com.sabre.api.sacs.soap.callback;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +15,8 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
 
+import com.sabre.api.sacs.contract.soap.Description;
+import com.sabre.api.sacs.contract.soap.MessageData;
 import com.sabre.api.sacs.contract.soap.MessageHeader;
 import com.sabre.api.sacs.contract.soap.Security;
 import com.sabre.api.sacs.soap.pool.SessionPool;
@@ -51,6 +58,23 @@ public class HeaderComposingCallback implements HeaderCallback {
 
         header = messageHeaderFactory.getMessageHeader(this.actionString);
         header.setConversationId(workflowContext.getConversationId());
+        header.setCPAId("");
+        MessageData mData = new MessageData();
+        mData.setMessageId("");
+        mData.setTimestamp((new Date()).toString());
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTime(new Date());
+        XMLGregorianCalendar date2 = null;
+        try {
+            date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+        } catch (DatatypeConfigurationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        mData.setTimeToLive(date2.normalize());
+        header.setMessageData(mData);
+        header.setDuplicateElimination("");
+        header.getDescription().add(new Description());
 
         if (creatingSession) {
             throw new UnsupportedOperationException("Legal for calls other than Session Create and Session Close.");

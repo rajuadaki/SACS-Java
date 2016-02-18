@@ -64,7 +64,7 @@ public class SessionPoolTest {
         Assert.assertEquals("BST1", returned.getBinarySecurityToken());
         Assert.assertEquals(1, toBeTested.getBusy().size());
         Assert.assertEquals(0, toBeTested.getAvailable().length);
-        toBeTested.returnToPool(returned, context.getConversationId());
+        toBeTested.returnToPool(context.getConversationId());
         Assert.assertEquals(0, toBeTested.getBusy().size());
         Assert.assertEquals(1, toBeTested.getAvailable().length);
     }

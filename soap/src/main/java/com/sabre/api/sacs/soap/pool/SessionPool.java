@@ -120,11 +120,9 @@ public class SessionPool {
      * @param session {@link Security} object to be returned.
      * @param conversationId workflow's ConversationId.
      */
-    public void returnToPool(Security session, String conversationId) {
-        LOG.debug("Returning session for ConversationID: " + conversationId);
+    public void returnToPool(String conversationId) {
+        LOG.info("Returning session for ConversationID: " + conversationId);
         Security toReturn = busy.get(conversationId);
-        LOG.debug("same session? " + session.equals(toReturn));
-        LOG.debug("busy contains the session which should be returned? " + busy.containsValue(session));
         SharedContext temp = new SharedContext();
         temp.setConversationId(conversationId);
         if (toReturn != null) {
@@ -132,18 +130,14 @@ public class SessionPool {
             
             if (!available.contains(toReturn)) {
                 boolean added = available.offer(toReturn);
-                LOG.debug("Returned to pool? " + added);
+                LOG.info("Returned to pool? " + added);
             } else {
-                LOG.debug("This session is already in pool.");
+                LOG.info("This session is already in pool.");
             }
         } else {
-            LOG.debug("No session in the busy map for ConversationID: " + conversationId);
-            LOG.debug("Busy map size: " + busy.size());
-            LOG.debug("Available queue size: " + available.size());
-            ignoreTransaction.executeRequest(session, temp);
-            if (!available.contains(session)) {
-                available.offer(session);
-            }
+            LOG.info("No session in the busy map for ConversationID: " + conversationId);
+            LOG.info("Busy map size: " + busy.size());
+            LOG.info("Available queue size: " + available.size());
         }
         busy.remove(conversationId);
     }

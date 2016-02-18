@@ -34,6 +34,16 @@ public class SoapApplicationConfiguration {
     }
 
     @Bean
+    public HeaderComposingCallback bargainFinderMaxHeaderComposingCallback() {
+        return new HeaderComposingCallback("BargainFinderMaxRQ");
+    }
+
+    @Bean
+    public HeaderComposingCallback enhancedAirBookHeaderComposingCallback() {
+        return new HeaderComposingCallback("EnhancedAirBookRQ");
+    }
+
+    @Bean
     public HeaderComposingCallback sessionCloseHeaderComposingCallback() {
         return new HeaderComposingCallback("SessionCloseRQ");
     }

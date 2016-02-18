@@ -19,6 +19,25 @@
 				<groupId>org.jvnet.jaxb2.maven2</groupId>
 				<artifactId>maven-jaxb2-plugin</artifactId>
 				<version>0.12.3</version>
+<!-- 				<configuration> -->
+<!--                 <plugins> -->
+<!--                     <plugin> -->
+<!--                         <groupId>org.jvnet.jaxb2_commons</groupId> -->
+<!--                         <artifactId>jaxb2-basics</artifactId> -->
+<!--                         <version>0.6.2</version> -->
+<!--                     </plugin> -->
+<!--                     <plugin> -->
+<!--                         <groupId>org.jvnet.jaxb2_commons</groupId> -->
+<!--                         <artifactId>jaxb2-basics-annotate</artifactId> -->
+<!--                         <version>0.6.2</version> -->
+<!--                     </plugin> -->
+<!--                     <plugin> -->
+<!--                         <groupId>org.jvnet.jaxb2_commons</groupId> -->
+<!--                         <artifactId>jaxb2-namespace-prefix</artifactId> -->
+<!--                         <version>1.1</version> -->
+<!--                     </plugin> -->
+<!--                 </plugins> -->
+<!-- 				</configuration> -->
 				<executions>
 					<execution>
 						<id>session-schemas</id>
@@ -144,6 +163,46 @@
 							</schemaIncludes>
 						</configuration>
 					</execution>
+					<execution>
+						<id>bargain-finder-max-schemas</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<schemaLanguage>XMLSCHEMA</schemaLanguage>
+							<forceRegenerate>true</forceRegenerate>
+							<bindingIncludes>
+								<include>**/bargain-finder-max-custom-binding.jxb</include>
+							</bindingIncludes>
+							<generateDirectory>${project.build.directory}/generated-sources/xjc-5</generateDirectory>
+							<generatePackage>com.sabre.api.sacs.contract.bargainfindermax</generatePackage>
+							<schemaIncludes>
+								<include>**/wsdls/BargainFinderMaxRQ/*RQRS*.xsd</include>
+							</schemaIncludes>
+							<schemaExcludes>
+								<exclude>**/wsse.xsd</exclude>
+								<exclude>**/wsse2.xsd</exclude>
+								<exclude>**/msg-header-2_0.xsd</exclude>
+							</schemaExcludes>
+						</configuration>
+					</execution>
+					<execution>
+                        <id>enhanced-air-book-schemas</id>
+                        <goals><goal>generate</goal></goals>
+                        <configuration>
+                            <schemaLanguage>XMLSCHEMA</schemaLanguage>
+                            <forceRegenerate>true</forceRegenerate>
+                            <bindingIncludes>
+                                <include>**/enhanced-airbook-custom-binding.jxb</include>
+                            </bindingIncludes>
+                            <generateDirectory>${project.build.directory}/generated-sources/xjc-6</generateDirectory>
+                            <generatePackage>com.sabre.api.sacs.contract.enhancedairbook</generatePackage>
+                            <schemaIncludes>
+                                <include>**/wsdls/EnhancedAirBookRQ/*3.2.0RQRS.xsd</include>
+                            </schemaIncludes>
+                        </configuration>
+                    </execution>
+					
 				</executions>
 			</plugin>
 		</plugins>
