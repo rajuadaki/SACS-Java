@@ -56,7 +56,7 @@ public class TravelItineraryReadTest {
     }
     
     @Test
-    public void testCall() throws IOException {
+    public void testCall() throws IOException, InterruptedException {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
         marshaller.setContextPath("com.sabre.api.sacs.contract.travelitinerary");
         Result marshalledRequest = new StringResult();

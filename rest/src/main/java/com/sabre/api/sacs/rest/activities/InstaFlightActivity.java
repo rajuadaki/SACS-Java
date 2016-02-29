@@ -29,7 +29,7 @@ public class InstaFlightActivity implements Activity {
     private BargainFinderMaxActivity next;
     
     @Autowired
-    GenericRestGetCall<LeadPriceCalendarRequest> call;
+    private GenericRestGetCall<LeadPriceCalendarRequest> call;
     
     @Override
     public Activity run(SharedContext context) {

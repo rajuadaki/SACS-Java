@@ -2,7 +2,9 @@ package com.sabre.api.sacs.soap.orchestratedflow;
 
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -20,6 +22,7 @@ import com.sabre.api.sacs.contract.passengerdetails.PassengerDetailsRQ;
 import com.sabre.api.sacs.contract.passengerdetails.PassengerDetailsRS;
 import com.sabre.api.sacs.errors.ErrorHandlingSchedule;
 import com.sabre.api.sacs.soap.common.GenericRequestWrapper;
+import com.sabre.api.sacs.soap.pool.SessionPool;
 import com.sabre.api.sacs.workflow.Activity;
 import com.sabre.api.sacs.workflow.SharedContext;
 
@@ -44,6 +47,9 @@ public class PassengerDetailsActivity implements Activity {
 	@Autowired
 	private SacsConfiguration configuration;
 	
+	@Autowired
+	private SessionPool sessionPool;
+	
 	@Override
 	public Activity run(SharedContext context) {
         Marshaller marsh;
@@ -57,6 +63,7 @@ public class PassengerDetailsActivity implements Activity {
 			    context.setFaulty(true);
 			    LOG.warn("Error found, adding context to ErrorHandler. ConversationID: " + context.getConversationId());
 			    errorHandler.addSystemFailure(context);
+			    sessionPool.returnToPool(context.getConversationId());
 			    return null;
 			}
 			marsh.marshal(result, sw);
@@ -64,7 +71,9 @@ public class PassengerDetailsActivity implements Activity {
 			context.putResult("PNR", result.getTravelItineraryReadRS().getTravelItinerary().getItineraryRef().getID());
 		} catch (JAXBException e) {
 		    LOG.error("Error while marshalling the response.", e);
-		}
+		} catch (InterruptedException e) {
+            LOG.catching(e);
+        }
 
 		return next;
 	}
@@ -91,7 +100,12 @@ public class PassengerDetailsActivity implements Activity {
         PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment miscSegment = new PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment();
         miscSegment.setText("RETENTION SEGMENT");
         miscSegment.setType("OTH");
-        miscSegment.setDepartureDateTime("2015-02-27");
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+
+        miscSegment.setDepartureDateTime(sdf.format(cal.getTime()));
         miscSegment.setNumberInParty(new BigInteger("1"));
         miscSegment.setStatus("HK");
         PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment.OriginLocation originLocation = new PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment.OriginLocation();
@@ -139,7 +153,7 @@ public class PassengerDetailsActivity implements Activity {
         secureFlight.setSegmentNumber("A");
 
         PassengerDetailsRQ.SpecialReqDetails.SpecialServiceRQ.SpecialServiceInfo.SecureFlight.PersonName personName = new PassengerDetailsRQ.SpecialReqDetails.SpecialServiceRQ.SpecialServiceInfo.SecureFlight.PersonName();
-        personName.setGivenName("SWS");
+        personName.setGivenName("SACS");
         personName.setSurname("TEST");
         personName.setDateOfBirth("1977-11-27");
         personName.setGender("M");
@@ -198,11 +212,11 @@ public class PassengerDetailsActivity implements Activity {
         customerInfo.getEmail().add(email);
         PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.PersonName personName1 = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.PersonName();
         personName1.setNameNumber("1.1");
-        personName1.setGivenName("SWS"+RandomStringUtils.randomAlphabetic(4));
+        personName1.setGivenName("SACS"+RandomStringUtils.randomAlphabetic(4));
         personName1.setSurname("TEST"+RandomStringUtils.randomAlphabetic(4));
         customerInfo.getPersonName().add(personName1);
         travelItineraryAddInfoRQ.setCustomerInfo(customerInfo);
-        //travelItineraryAddInfoRQ.setAgencyInfo(getAgencyInfo());
+        travelItineraryAddInfoRQ.setAgencyInfo(getAgencyInfo());
 
         return travelItineraryAddInfoRQ;
     }

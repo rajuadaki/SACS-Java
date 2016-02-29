@@ -18,6 +18,7 @@ import com.sabre.api.sacs.contract.passengerdetails.PassengerDetailsRQ;
 import com.sabre.api.sacs.contract.passengerdetails.PassengerDetailsRS;
 import com.sabre.api.sacs.errors.ErrorHandlingSchedule;
 import com.sabre.api.sacs.soap.common.GenericRequestWrapper;
+import com.sabre.api.sacs.soap.pool.SessionPool;
 import com.sabre.api.sacs.workflow.Activity;
 import com.sabre.api.sacs.workflow.SharedContext;
 
@@ -42,6 +43,9 @@ public class PassengerDetailsNameOnlyActivity implements Activity {
 	@Autowired
 	private SacsConfiguration configuration;
 	
+    @Autowired
+    private SessionPool sessionPool;
+    
 	@Override
 	public Activity run(SharedContext context) {
         Marshaller marsh;
@@ -55,13 +59,16 @@ public class PassengerDetailsNameOnlyActivity implements Activity {
 			    context.setFaulty(true);
 			    LOG.warn("Error found, adding context to ErrorHandler. ConversationID: " + context.getConversationId());
 			    errorHandler.addSystemFailure(context);
+                sessionPool.returnToPool(context.getConversationId());
 			    return null;
 			}
 			marsh.marshal(result, sw);
 			context.putResult("PassengerDetailsNameOnlyRQ", sw.toString());
 		} catch (JAXBException e) {
 		    LOG.error("Error while marshalling the response.", e);
-		}
+		} catch (InterruptedException e) {
+            LOG.catching(e);
+        }
 
 		return next;
 	}
@@ -73,9 +80,6 @@ public class PassengerDetailsNameOnlyActivity implements Activity {
         request.setHaltOnError(true);
         request.setVersion(configuration.getSoapProperty("PassengerDetailsRQVersion"));
 
-//        request.setMiscSegmentSellRQ(getMiscSegmentSellRQ());
-//        request.setPostProcessing(getPostProcessing());
-//        request.setSpecialReqDetails(getSpecialReqDetails());
         request.setTravelItineraryAddInfoRQ(getTravelItineraryAddInfoRQ());
 
         return request;
@@ -102,7 +106,6 @@ public class PassengerDetailsNameOnlyActivity implements Activity {
         personName1.setSurname("TEST"+RandomStringUtils.randomAlphabetic(4));
         customerInfo.getPersonName().add(personName1);
         travelItineraryAddInfoRQ.setCustomerInfo(customerInfo);
-        //travelItineraryAddInfoRQ.setAgencyInfo(getAgencyInfo());
 
         return travelItineraryAddInfoRQ;
     }

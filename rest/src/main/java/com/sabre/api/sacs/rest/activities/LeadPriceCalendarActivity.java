@@ -23,7 +23,7 @@ public class LeadPriceCalendarActivity implements Activity {
     private InstaFlightActivity next;
     
     @Autowired
-    GenericRestGetCall<LeadPriceCalendarRequest> call;
+    private GenericRestGetCall<LeadPriceCalendarRequest> call;
 
     @Override
     public Activity run(SharedContext context) {

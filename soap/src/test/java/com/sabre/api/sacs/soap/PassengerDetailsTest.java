@@ -54,7 +54,7 @@ public class PassengerDetailsTest {
     }
 
     @Test
-    public void testCall() throws IOException {
+    public void testCall() throws IOException, InterruptedException {
         Source responsePayload = new StringSource(getResponseBody());
         mockServer.expect(anything()).andRespond(withSoapEnvelope(responsePayload));
         pd.setRequest(getRequestBody());

@@ -15,7 +15,9 @@ import org.springframework.stereotype.Controller;
 import com.sabre.api.sacs.configuration.SacsConfiguration;
 import com.sabre.api.sacs.contract.travelitinerary.TravelItineraryReadRQ;
 import com.sabre.api.sacs.contract.travelitinerary.TravelItineraryReadRS;
+import com.sabre.api.sacs.errors.ErrorHandlingSchedule;
 import com.sabre.api.sacs.soap.common.GenericRequestWrapper;
+import com.sabre.api.sacs.soap.pool.SessionPool;
 import com.sabre.api.sacs.workflow.Activity;
 import com.sabre.api.sacs.workflow.SharedContext;
 
@@ -32,7 +34,13 @@ public class TravelItineraryReadActivity implements Activity {
     private GenericRequestWrapper<TravelItineraryReadRQ, TravelItineraryReadRS> tir;
     
     @Autowired
+    private ErrorHandlingSchedule errorHandler;
+    
+    @Autowired
     private SacsConfiguration configuration;
+    
+    @Autowired
+    private SessionPool sessionPool;
     
     @Override
     public Activity run(SharedContext context) {
@@ -43,10 +51,19 @@ public class TravelItineraryReadActivity implements Activity {
             tir.setRequest(getRequestBody(context.getResult("PNR").toString()));
             tir.setLastInFlow(true);
             TravelItineraryReadRS result = tir.executeRequest(context); 
+            if (result.getApplicationResults() != null && result.getApplicationResults().getError() != null && !result.getApplicationResults().getError().isEmpty()) {
+                context.setFaulty(true);
+                LOG.warn("Error found, adding context to ErrorHandler. ConversationID: " + context.getConversationId());
+                errorHandler.addSystemFailure(context);
+                sessionPool.returnToPool(context.getConversationId());
+                return null;
+            }
             marsh.marshal(result, sw);
             context.putResult("TravelItineraryReadRQ", sw.toString());
         } catch (JAXBException e) {
             LOG.error("Error while marshalling the response.", e);
+        } catch (InterruptedException e) {
+            LOG.catching(e);
         }
 
         return null;

@@ -38,7 +38,7 @@ public class BargainFinderMaxActivity implements Activity {
     private SacsConfiguration config;
     
     @Autowired
-    GenericRestPostCall<BargainFinderMaxRequest> call;
+    private GenericRestPostCall<BargainFinderMaxRequest> call;
 
     @Override
     public Activity run(SharedContext context) {

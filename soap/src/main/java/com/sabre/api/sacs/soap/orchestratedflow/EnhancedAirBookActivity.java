@@ -22,6 +22,7 @@ import com.sabre.api.sacs.contract.enhancedairbook.EnhancedAirBookRQ;
 import com.sabre.api.sacs.contract.enhancedairbook.EnhancedAirBookRS;
 import com.sabre.api.sacs.errors.ErrorHandlingSchedule;
 import com.sabre.api.sacs.soap.common.GenericRequestWrapper;
+import com.sabre.api.sacs.soap.pool.SessionPool;
 import com.sabre.api.sacs.workflow.Activity;
 import com.sabre.api.sacs.workflow.SharedContext;
 
@@ -43,6 +44,9 @@ public class EnhancedAirBookActivity implements Activity {
     @Autowired
     private GenericRequestWrapper<EnhancedAirBookRQ, EnhancedAirBookRS> eab;
     
+    @Autowired
+    private SessionPool sessionPool;
+    
     @Override
     public Activity run(SharedContext context) {
         Marshaller marsh;
@@ -58,12 +62,15 @@ public class EnhancedAirBookActivity implements Activity {
                 context.setFaulty(true);
                 LOG.warn("Error found, adding context to ErrorHandler. ConversationID: " + context.getConversationId());
                 errorHandler.addSystemFailure(context);
+                sessionPool.returnToPool(context.getConversationId());
                 return null;
             }
             marsh.marshal(result, sw);
             context.putResult("EnhancedAirBookRQ", sw.toString());
         } catch (JAXBException e) {
             LOG.error("Error while marshalling the response.", e);
+        } catch (InterruptedException e) {
+            LOG.catching(e);
         }
 
         return next;
@@ -113,13 +120,6 @@ public class EnhancedAirBookActivity implements Activity {
         operatingAirline.setCode(bfst.getOperatingAirline().getCode());
         originLocation.setLocationCode(bfst.getDepartureAirport().getLocationCode());
 
-//        destinationLocation.setLocationCode("FRA");
-//        equipment.setAirEquipType("343");
-//        marketingAirline.setCode("UA");
-//        marketingAirline.setFlightNumber("8865");
-//        operatingAirline.setCode("LH");
-//        originLocation.setLocationCode("DFW");
-
         flightSegment.setDestinationLocation(destinationLocation);
         flightSegment.setEquipment(equipment);
         flightSegment.setOperatingAirline(operatingAirline);
@@ -129,14 +129,9 @@ public class EnhancedAirBookActivity implements Activity {
         flightSegment.setFlightNumber(bfst.getFlightNumber());
         flightSegment.setDepartureDateTime(bfst.getDepartureDateTime());
         flightSegment.setNumberInParty(bfst.getNumberInParty()==null?"1":bfst.getNumberInParty().toString());
-        flightSegment.setStatus("GK");
+        flightSegment.setStatus("NN");
         flightSegment.setResBookDesigCode(bfst.getResBookDesigCode());
 
-//        flightSegment.setFlightNumber("8865");
-//        flightSegment.setDepartureDateTime("2016-02-21T16:10");
-//        flightSegment.setNumberInParty("1");
-//        flightSegment.setStatus("GK");
-//        flightSegment.setResBookDesigCode("Y");
 
         return flightSegment;
     }

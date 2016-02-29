@@ -3,6 +3,8 @@ package com.sabre.api.sacs.soap.common;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.annotation.PostConstruct;
 
@@ -19,6 +21,7 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
 import com.sabre.api.sacs.configuration.SacsConfiguration;
 import com.sabre.api.sacs.errors.ErrorHandlingSchedule;
 import com.sabre.api.sacs.soap.callback.HeaderCallback;
+import com.sabre.api.sacs.soap.callback.HeaderComposingCallback;
 import com.sabre.api.sacs.soap.interceptor.FaultInterceptor;
 import com.sabre.api.sacs.soap.interceptor.LoggingInterceptor;
 import com.sabre.api.sacs.soap.interceptor.SessionPoolInterceptor;
@@ -53,6 +56,8 @@ public abstract class GenericRequestWrapper<RQ, RS> extends WebServiceGatewaySup
     private RQ request;
     
     private boolean lastInFlow;
+    
+    private BlockingQueue<RS> resultLock = new LinkedBlockingQueue<>();
 
     public void setRequest(RQ request) {
         this.request = request;
@@ -106,37 +111,53 @@ public abstract class GenericRequestWrapper<RQ, RS> extends WebServiceGatewaySup
      * Executes the call.
      * @param workflowContext the context in which the call is being run.
      * @return the response object.
+     * @throws InterruptedException 
      */
-    @SuppressWarnings("unchecked")
-    public RS executeRequest(SharedContext workflowContext) {
-        RS result = null;
+    public RS executeRequest(SharedContext workflowContext) throws InterruptedException {
+        new Thread(new SoapCallTask(workflowContext)).start();
+        return resultLock.take();
+    }
+    
+    private class SoapCallTask implements Runnable {
+
+        private SharedContext workflowContext;
         
-
-        if (lastInFlow) {
-            List<ClientInterceptor> interceptors = new ArrayList<>();
-            interceptors.addAll(Arrays.asList(this.getInterceptors()));
-            interceptors.add(sessionPoolInterceptor);
-            this.setInterceptors(interceptors.toArray(new ClientInterceptor[0]));
-        }
-        callback().setWorkflowContext(workflowContext);
-        boolean isFault = false;
-        try {
-            result = (RS) getWebServiceTemplate().marshalSendAndReceive(
-                request,
-                callback()
-                );
-        } catch (SoapFaultClientException e) {
-            isFault = true;
-            workflowContext.setFaulty(true);
-            LOG.catching(e);
-        }
-        if (!isFault) {
-            LOG.info("Request succeeded (y)");
-        } else {
-            errorHandler.addSystemFailure(workflowContext);
+        SoapCallTask(SharedContext workflowContext) {
+            this.workflowContext = workflowContext;
         }
 
-        return result;
+        @SuppressWarnings("unchecked")
+        @Override
+        public void run() {
+            RS result = null;
+            
+
+            if (lastInFlow) {
+                List<ClientInterceptor> interceptors = new ArrayList<>();
+                interceptors.addAll(Arrays.asList(getInterceptors()));
+                interceptors.add(sessionPoolInterceptor);
+                setInterceptors(interceptors.toArray(new ClientInterceptor[0]));
+            }
+            callback().setWorkflowContext(workflowContext);
+            boolean isFault = false;
+            try {
+                result = (RS) getWebServiceTemplate().marshalSendAndReceive(
+                    request,
+                    callback()
+                    );
+            } catch (SoapFaultClientException e) {
+                isFault = true;
+                workflowContext.setFaulty(true);
+                LOG.catching(e);
+            }
+            if (!isFault) {
+                LOG.info("Request succeeded (y)");
+            } else {
+                errorHandler.addSystemFailure(workflowContext);
+            }
+            resultLock.offer(result);
+        }
+        
     }
 
 }

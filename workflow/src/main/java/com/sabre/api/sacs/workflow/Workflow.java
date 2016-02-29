@@ -30,12 +30,8 @@ public class Workflow {
         LOG.debug("Running workflow with the start activity: " + startActivity.toString());
         LOG.debug("for the " + sharedContext.getRerun() + " time.");
         LOG.debug("With the ConversationID: " + sharedContext.getConversationId());
-        while (next != null) {
-            if (!sharedContext.isFaulty()) {
-                next = next.run(sharedContext);
-            } else {
-                break;
-            }
+        while (next != null && !sharedContext.isFaulty()) {
+            next = next.run(sharedContext);
         }
         return sharedContext;
     }
