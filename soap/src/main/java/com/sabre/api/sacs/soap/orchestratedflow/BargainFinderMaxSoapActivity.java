@@ -4,7 +4,6 @@ import java.io.StringWriter;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -70,8 +69,11 @@ public class BargainFinderMaxSoapActivity implements Activity {
         try {
             marsh = JAXBContext.newInstance("com.sabre.api.sacs.contract.bargainfindermax").createMarshaller();
             StringWriter sw = new StringWriter();
-            bfm.setRequest(getRequestBody());
+            OTAAirLowFareSearchRQ request = getRequestBody();
+            bfm.setRequest(request);
             bfm.setLastInFlow(false);
+            marsh.marshal(request, sw);
+            context.putResult("BargainFinderMaxRQ", sw.toString());
             OTAAirLowFareSearchRS result = bfm.executeRequest(context);
             if (result.getErrors() != null && result.getErrors().getError() != null && !result.getErrors().getError().isEmpty()) {
                 context.setFaulty(true);
@@ -80,9 +82,10 @@ public class BargainFinderMaxSoapActivity implements Activity {
                 sessionPool.returnToPool(context.getConversationId());
                 return null;
             }
+            sw = new StringWriter();
             marsh.marshal(result, sw);
-            context.putResult("BargainFinderMaxRQObj", result);
-            context.putResult("BargainFinderMaxRQ", sw.toString());
+            context.putResult("BargainFinderMaxRSObj", result);
+            context.putResult("BargainFinderMaxRS", sw.toString());
         } catch (JAXBException e) {
             LOG.error("Error while marshalling the response.", e);
         } catch (InterruptedException e) {

@@ -22,44 +22,50 @@ import com.sabre.api.sacs.workflow.Activity;
 import com.sabre.api.sacs.workflow.SharedContext;
 
 /**
- * Activity class to be used in the workflow. It runs the TravelItineraryRead request.
+ * Activity class to be used in the workflow. It runs the TravelItineraryRead
+ * request.
  */
 @Controller
 @Scope("prototype")
 public class TravelItineraryReadActivity implements Activity {
 
     private static final Logger LOG = LogManager.getLogger(TravelItineraryReadActivity.class);
-    
+
     @Autowired
     private GenericRequestWrapper<TravelItineraryReadRQ, TravelItineraryReadRS> tir;
-    
+
     @Autowired
     private ErrorHandlingSchedule errorHandler;
-    
+
     @Autowired
     private SacsConfiguration configuration;
-    
+
     @Autowired
     private SessionPool sessionPool;
-    
+
     @Override
     public Activity run(SharedContext context) {
         Marshaller marsh;
         try {
             marsh = JAXBContext.newInstance("com.sabre.api.sacs.contract.travelitinerary").createMarshaller();
             StringWriter sw = new StringWriter();
-            tir.setRequest(getRequestBody(context.getResult("PNR").toString()));
+            TravelItineraryReadRQ request = getRequestBody(context.getResult("PNR").toString());
+            tir.setRequest(request);
             tir.setLastInFlow(true);
-            TravelItineraryReadRS result = tir.executeRequest(context); 
-            if (result.getApplicationResults() != null && result.getApplicationResults().getError() != null && !result.getApplicationResults().getError().isEmpty()) {
+            marsh.marshal(request, sw);
+            context.putResult("TravelItineraryReadRQ", sw.toString());
+            TravelItineraryReadRS result = tir.executeRequest(context);
+            if (result.getApplicationResults() != null && result.getApplicationResults().getError() != null
+                    && !result.getApplicationResults().getError().isEmpty()) {
                 context.setFaulty(true);
                 LOG.warn("Error found, adding context to ErrorHandler. ConversationID: " + context.getConversationId());
                 errorHandler.addSystemFailure(context);
                 sessionPool.returnToPool(context.getConversationId());
                 return null;
             }
+            sw = new StringWriter();
             marsh.marshal(result, sw);
-            context.putResult("TravelItineraryReadRQ", sw.toString());
+            context.putResult("TravelItineraryReadRS", sw.toString());
         } catch (JAXBException e) {
             LOG.error("Error while marshalling the response.", e);
         } catch (InterruptedException e) {
@@ -68,7 +74,7 @@ public class TravelItineraryReadActivity implements Activity {
 
         return null;
     }
-    
+
     private TravelItineraryReadRQ getRequestBody(String pnr) {
 
         TravelItineraryReadRQ body = new TravelItineraryReadRQ();
@@ -87,6 +93,5 @@ public class TravelItineraryReadActivity implements Activity {
 
         return body;
     }
-
 
 }

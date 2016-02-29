@@ -52,8 +52,11 @@ public class PassengerDetailsNameOnlyActivity implements Activity {
 		try {
 			marsh = JAXBContext.newInstance("com.sabre.api.sacs.contract.passengerdetails").createMarshaller();
 			StringWriter sw = new StringWriter();
-			pd.setRequest(getRequestBody());
+			PassengerDetailsRQ request = getRequestBody();
+			pd.setRequest(request);
 			pd.setLastInFlow(false);
+			marsh.marshal(request, sw);
+			context.putResult("PassengerDetailsNameOnlyRQ", sw.toString());
 			PassengerDetailsRS result = pd.executeRequest(context);
 			if (result.getApplicationResults() != null && result.getApplicationResults().getError() != null && !result.getApplicationResults().getError().isEmpty()) {
 			    context.setFaulty(true);
@@ -62,8 +65,9 @@ public class PassengerDetailsNameOnlyActivity implements Activity {
                 sessionPool.returnToPool(context.getConversationId());
 			    return null;
 			}
+			sw = new StringWriter();
 			marsh.marshal(result, sw);
-			context.putResult("PassengerDetailsNameOnlyRQ", sw.toString());
+			context.putResult("PassengerDetailsNameOnlyRSW", sw.toString());
 		} catch (JAXBException e) {
 		    LOG.error("Error while marshalling the response.", e);
 		} catch (InterruptedException e) {

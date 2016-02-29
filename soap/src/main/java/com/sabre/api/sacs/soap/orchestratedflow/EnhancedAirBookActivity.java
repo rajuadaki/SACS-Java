@@ -54,10 +54,13 @@ public class EnhancedAirBookActivity implements Activity {
             marsh = JAXBContext.newInstance("com.sabre.api.sacs.contract.enhancedairbook").createMarshaller();
             StringWriter sw = new StringWriter();
             
-            OTAAirLowFareSearchRS bfmResult = (OTAAirLowFareSearchRS) context.getResult("BargainFinderMaxRQObj");
-            eab.setRequest(getRequestBody(bfmResult));
+            OTAAirLowFareSearchRS bfmResult = (OTAAirLowFareSearchRS) context.getResult("BargainFinderMaxRSObj");
+            EnhancedAirBookRQ request = getRequestBody(bfmResult);
+            eab.setRequest(request);
             eab.setLastInFlow(false);
             EnhancedAirBookRS result = eab.executeRequest(context);
+            marsh.marshal(request, sw);
+            context.putResult("EnhancedAirBookRQ", sw.toString());
             if (result.getApplicationResults() != null && result.getApplicationResults().getError() != null && !result.getApplicationResults().getError().isEmpty()) {
                 context.setFaulty(true);
                 LOG.warn("Error found, adding context to ErrorHandler. ConversationID: " + context.getConversationId());
@@ -65,8 +68,9 @@ public class EnhancedAirBookActivity implements Activity {
                 sessionPool.returnToPool(context.getConversationId());
                 return null;
             }
+            sw = new StringWriter();
             marsh.marshal(result, sw);
-            context.putResult("EnhancedAirBookRQ", sw.toString());
+            context.putResult("EnhancedAirBookRS", sw.toString());
         } catch (JAXBException e) {
             LOG.error("Error while marshalling the response.", e);
         } catch (InterruptedException e) {
