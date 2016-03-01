@@ -89,7 +89,7 @@ public class PassengerDetailsActivity implements Activity {
         request.setHaltOnError(true);
         request.setVersion(configuration.getSoapProperty("PassengerDetailsRQVersion"));
 
-        request.setMiscSegmentSellRQ(getMiscSegmentSellRQ());
+        //request.setMiscSegmentSellRQ(getMiscSegmentSellRQ());
         request.setPostProcessing(getPostProcessing());
         request.setSpecialReqDetails(getSpecialReqDetails());
         request.setTravelItineraryAddInfoRQ(getTravelItineraryAddInfoRQ());
@@ -205,21 +205,21 @@ public class PassengerDetailsActivity implements Activity {
     private PassengerDetailsRQ.TravelItineraryAddInfoRQ getTravelItineraryAddInfoRQ() {
 
         PassengerDetailsRQ.TravelItineraryAddInfoRQ travelItineraryAddInfoRQ = new PassengerDetailsRQ.TravelItineraryAddInfoRQ();
-        PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo customerInfo = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo();
+        //PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo customerInfo = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo();
 
-        customerInfo.setContactNumbers(getContactNumbers());
+//        customerInfo.setContactNumbers(getContactNumbers());
 
-        PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.Email email = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.Email();
-        email.setAddress("webservices.support@sabre.com");
-        email.setNameNumber("1.1");
+//        PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.Email email = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.Email();
+//        email.setAddress("webservices.support@sabre.com");
+//        email.setNameNumber("1.1");
 
-        customerInfo.getEmail().add(email);
-        PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.PersonName personName1 = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.PersonName();
-        personName1.setNameNumber("1.1");
-        personName1.setGivenName("SACS"+RandomStringUtils.randomAlphabetic(4));
-        personName1.setSurname("TEST"+RandomStringUtils.randomAlphabetic(4));
-        customerInfo.getPersonName().add(personName1);
-        travelItineraryAddInfoRQ.setCustomerInfo(customerInfo);
+//        customerInfo.getEmail().add(email);
+//        PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.PersonName personName1 = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.PersonName();
+//        personName1.setNameNumber("1.1");
+//        personName1.setGivenName("SACS"+RandomStringUtils.randomAlphabetic(4));
+//        personName1.setSurname("TEST"+RandomStringUtils.randomAlphabetic(4));
+//        customerInfo.getPersonName().add(personName1);
+//        travelItineraryAddInfoRQ.setCustomerInfo(customerInfo);
         travelItineraryAddInfoRQ.setAgencyInfo(getAgencyInfo());
 
         return travelItineraryAddInfoRQ;
