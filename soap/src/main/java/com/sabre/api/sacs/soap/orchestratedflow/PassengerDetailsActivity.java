@@ -1,16 +1,12 @@
 package com.sabre.api.sacs.soap.orchestratedflow;
 
 import java.io.StringWriter;
-import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +85,6 @@ public class PassengerDetailsActivity implements Activity {
         request.setHaltOnError(true);
         request.setVersion(configuration.getSoapProperty("PassengerDetailsRQVersion"));
 
-        //request.setMiscSegmentSellRQ(getMiscSegmentSellRQ());
         request.setPostProcessing(getPostProcessing());
         request.setSpecialReqDetails(getSpecialReqDetails());
         request.setTravelItineraryAddInfoRQ(getTravelItineraryAddInfoRQ());
@@ -98,34 +93,6 @@ public class PassengerDetailsActivity implements Activity {
 
     }
 
-    private PassengerDetailsRQ.MiscSegmentSellRQ getMiscSegmentSellRQ() {
-
-        PassengerDetailsRQ.MiscSegmentSellRQ miscSegmentSellRQ = new PassengerDetailsRQ.MiscSegmentSellRQ();
-        PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment miscSegment = new PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment();
-        miscSegment.setText("RETENTION SEGMENT");
-        miscSegment.setType("OTH");
-        
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, 1);
-
-        miscSegment.setDepartureDateTime(sdf.format(cal.getTime()));
-        miscSegment.setNumberInParty(new BigInteger("1"));
-        miscSegment.setStatus("HK");
-        PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment.OriginLocation originLocation = new PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment.OriginLocation();
-        PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment.VendorPrefs vendorPrefs = new PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment.VendorPrefs();
-        PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment.VendorPrefs.Airline airline = new PassengerDetailsRQ.MiscSegmentSellRQ.MiscSegment.VendorPrefs.Airline();
-
-        originLocation.setLocationCode("DFW");
-        airline.setCode("DL");
-        vendorPrefs.setAirline(airline);
-
-        miscSegment.setOriginLocation(originLocation);
-        miscSegment.setVendorPrefs(vendorPrefs);
-        miscSegmentSellRQ.setMiscSegment(miscSegment);
-
-        return miscSegmentSellRQ;
-    }
 
     private PassengerDetailsRQ.PostProcessing getPostProcessing() {
 
@@ -153,7 +120,6 @@ public class PassengerDetailsActivity implements Activity {
         PassengerDetailsRQ.SpecialReqDetails.SpecialServiceRQ specialServiceRQ = new PassengerDetailsRQ.SpecialReqDetails.SpecialServiceRQ();
         PassengerDetailsRQ.SpecialReqDetails.SpecialServiceRQ.SpecialServiceInfo specialServiceInfo = new PassengerDetailsRQ.SpecialReqDetails.SpecialServiceRQ.SpecialServiceInfo();
         PassengerDetailsRQ.SpecialReqDetails.SpecialServiceRQ.SpecialServiceInfo.SecureFlight secureFlight = new PassengerDetailsRQ.SpecialReqDetails.SpecialServiceRQ.SpecialServiceInfo.SecureFlight();
-//        secureFlight.setSSRCode("DOCS");
         secureFlight.setSegmentNumber("A");
 
         PassengerDetailsRQ.SpecialReqDetails.SpecialServiceRQ.SpecialServiceInfo.SecureFlight.PersonName personName = new PassengerDetailsRQ.SpecialReqDetails.SpecialServiceRQ.SpecialServiceInfo.SecureFlight.PersonName();
@@ -205,21 +171,6 @@ public class PassengerDetailsActivity implements Activity {
     private PassengerDetailsRQ.TravelItineraryAddInfoRQ getTravelItineraryAddInfoRQ() {
 
         PassengerDetailsRQ.TravelItineraryAddInfoRQ travelItineraryAddInfoRQ = new PassengerDetailsRQ.TravelItineraryAddInfoRQ();
-        //PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo customerInfo = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo();
-
-//        customerInfo.setContactNumbers(getContactNumbers());
-
-//        PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.Email email = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.Email();
-//        email.setAddress("webservices.support@sabre.com");
-//        email.setNameNumber("1.1");
-
-//        customerInfo.getEmail().add(email);
-//        PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.PersonName personName1 = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.PersonName();
-//        personName1.setNameNumber("1.1");
-//        personName1.setGivenName("SACS"+RandomStringUtils.randomAlphabetic(4));
-//        personName1.setSurname("TEST"+RandomStringUtils.randomAlphabetic(4));
-//        customerInfo.getPersonName().add(personName1);
-//        travelItineraryAddInfoRQ.setCustomerInfo(customerInfo);
         travelItineraryAddInfoRQ.setAgencyInfo(getAgencyInfo());
 
         return travelItineraryAddInfoRQ;
@@ -244,29 +195,5 @@ public class PassengerDetailsActivity implements Activity {
 
         return agencyInfo;
     }
-
-    private PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.ContactNumbers getContactNumbers() {
-
-        PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.ContactNumbers contactNumbers = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.ContactNumbers();
-
-        PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.ContactNumbers.ContactNumber contactNumber1 = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.ContactNumbers.ContactNumber();
-        PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.ContactNumbers.ContactNumber contactNumber2 = new PassengerDetailsRQ.TravelItineraryAddInfoRQ.CustomerInfo.ContactNumbers.ContactNumber();
-
-        contactNumber1.setLocationCode("DFW");
-        contactNumber1.setNameNumber("1.1");
-        contactNumber1.setPhone("817-555-1212");
-        contactNumber1.setPhoneUseType("H");
-
-        contactNumber2.setLocationCode("DFW");
-        contactNumber2.setNameNumber("1.1");
-        contactNumber2.setPhone("682-555-1212");
-        contactNumber2.setPhoneUseType("O");
-
-        contactNumbers.getContactNumber().add(contactNumber1);
-        contactNumbers.getContactNumber().add(contactNumber2);
-
-        return contactNumbers;
-    }
-
 
 }
