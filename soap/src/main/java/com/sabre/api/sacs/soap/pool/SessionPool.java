@@ -14,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.sabre.api.sacs.configuration.SacsConfiguration;
 import com.sabre.api.sacs.contract.soap.Security;
@@ -29,7 +29,7 @@ import com.sabre.api.sacs.workflow.SharedContext;
  * session at init time, keeping the busy sessions and handing them to the 
  * correct workflows, as well as keeping the new workflows waiting for ther session.
  */
-@Repository
+@Service
 public class SessionPool {
 
     private static final Logger LOG = LogManager.getLogger(SessionPool.class);

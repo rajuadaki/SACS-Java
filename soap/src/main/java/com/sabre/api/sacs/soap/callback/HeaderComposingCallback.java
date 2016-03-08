@@ -9,6 +9,8 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.transform.TransformerException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.WebServiceMessage;
@@ -32,6 +34,8 @@ import com.sabre.api.sacs.workflow.SharedContext;
  */
 public class HeaderComposingCallback implements HeaderCallback {
 
+    private static final Logger LOG = LogManager.getLogger(HeaderComposingCallback.class);
+    
     private String actionString;
 
     private MessageHeader header;
@@ -68,8 +72,7 @@ public class HeaderComposingCallback implements HeaderCallback {
         try {
             date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
         } catch (DatatypeConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.catching(e);
         }
         mData.setTimeToLive(date2.normalize());
         header.setMessageData(mData);
@@ -79,6 +82,7 @@ public class HeaderComposingCallback implements HeaderCallback {
         if (creatingSession) {
             throw new UnsupportedOperationException("Legal for calls other than Session Create and Session Close.");
         } else {
+            LOG.debug("Going to session pool for security object for conversationID: " + workflowContext.getConversationId());
             security = sessionPool.getFromPool(workflowContext);
         }
 

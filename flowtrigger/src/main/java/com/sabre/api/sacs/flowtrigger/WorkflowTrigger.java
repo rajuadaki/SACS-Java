@@ -22,8 +22,6 @@ import com.sabre.api.sacs.workflow.Workflow;
 @RestController
 public class WorkflowTrigger {
 
-	private Workflow orchestratedWorkflow; 
-	
 	@Autowired
 	private Workflow restWorkflow;
 	
@@ -40,7 +38,7 @@ public class WorkflowTrigger {
 	@RequestMapping(value="/orchestratedFlow", method=RequestMethod.GET, produces="application/json")
 	public Map<String, Object> orchestratedFlow() {
 		Map<String, Object> result = new HashMap<>();
-		orchestratedWorkflow = (Workflow) ctx.getBean("orchestratedWorkflow");
+		Workflow orchestratedWorkflow = (Workflow) ctx.getBean("orchestratedWorkflow");
 		SharedContext wfResult = orchestratedWorkflow.run();
 		for (String request : wfResult.getKeys()) {
 			result.put(request, wfResult.getResult(request));

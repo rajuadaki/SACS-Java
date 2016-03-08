@@ -5,6 +5,7 @@ import javax.xml.bind.JAXBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.context.MessageContext;
@@ -18,6 +19,7 @@ import com.sabre.api.sacs.soap.pool.SessionPool;
  */
 
 @Controller
+@Scope("prototype")
 public class SessionPoolInterceptor extends AbstractSessionInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(SessionPoolInterceptor.class);

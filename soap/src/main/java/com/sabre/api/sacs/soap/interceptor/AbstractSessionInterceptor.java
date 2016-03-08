@@ -1,8 +1,5 @@
 package com.sabre.api.sacs.soap.interceptor;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
@@ -50,19 +47,6 @@ public abstract class AbstractSessionInterceptor implements ClientInterceptor {
 
     Security extractSecurityFromMessageContext(MessageContext messageContext) throws JAXBException {
         Jaxb2Marshaller unmarshaller = getUnmarshaller();
-        
-        /////////////////////////////////////////////////
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            LOG.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Message from which security is to be extracted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            messageContext.getResponse().writeTo(outputStream);
-            LOG.info(outputStream.toString("UTF-8"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        /////////////////////////////////
-        
         SoapMessage message = (SoapMessage) messageContext.getResponse();
         Source securitySource = message.getSoapHeader().examineHeaderElements(securityQName).next().getSource();
         return (Security) unmarshaller.unmarshal(securitySource);

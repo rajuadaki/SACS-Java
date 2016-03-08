@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Scope;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -24,26 +25,31 @@ import com.sabre.api.sacs.soap.callback.HeaderComposingCallback;
 public class SoapApplicationConfiguration {
 
     @Bean
+    @Scope("prototype")
     public HeaderComposingCallback travelItineraryHeaderComposingCallback() {
         return new HeaderComposingCallback("TravelItineraryReadRQ");
     }
 
     @Bean
+    @Scope("prototype")
     public HeaderComposingCallback passengerDetailsHeaderComposingCallback() {
         return new HeaderComposingCallback("PassengerDetailsRQ");
     }
 
     @Bean
+    @Scope("prototype")
     public HeaderComposingCallback bargainFinderMaxHeaderComposingCallback() {
         return new HeaderComposingCallback("BargainFinderMaxRQ");
     }
 
     @Bean
+    @Scope("prototype")
     public HeaderComposingCallback enhancedAirBookHeaderComposingCallback() {
         return new HeaderComposingCallback("EnhancedAirBookRQ");
     }
 
     @Bean
+    @Scope("prototype")
     public HeaderComposingCallback sessionCloseHeaderComposingCallback() {
         return new HeaderComposingCallback("SessionCloseRQ");
     }

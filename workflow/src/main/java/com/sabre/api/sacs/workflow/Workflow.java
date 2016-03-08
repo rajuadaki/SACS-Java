@@ -24,12 +24,13 @@ public class Workflow {
 
     public SharedContext run() {
         sharedContext.setOwner(this);
-        Activity next = startActivity;
         sharedContext.setConversationId(createConversationId());
         sharedContext.setRerun(sharedContext.getRerun() + 1);
+        Activity next = startActivity;
         LOG.debug("Running workflow with the start activity: " + startActivity.toString());
         LOG.debug("for the " + sharedContext.getRerun() + " time.");
         LOG.debug("With the ConversationID: " + sharedContext.getConversationId());
+        LOG.debug("And workflow id: " + this.toString());
         while (next != null && !sharedContext.isFaulty()) {
             next = next.run(sharedContext);
         }

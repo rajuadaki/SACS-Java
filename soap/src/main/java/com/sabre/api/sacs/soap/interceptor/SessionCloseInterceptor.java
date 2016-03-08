@@ -4,13 +4,11 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.context.MessageContext;
 
 import com.sabre.api.sacs.contract.soap.MessageHeader;
-import com.sabre.api.sacs.soap.pool.SessionPool;
 
 /**
  * This is an interceptor class for working with Spring Web Services framework.
@@ -22,9 +20,6 @@ import com.sabre.api.sacs.soap.pool.SessionPool;
 public class SessionCloseInterceptor extends AbstractSessionInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(SessionCloseInterceptor.class);
-
-    @Autowired
-    private SessionPool pool;
 
     @Override
     public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
