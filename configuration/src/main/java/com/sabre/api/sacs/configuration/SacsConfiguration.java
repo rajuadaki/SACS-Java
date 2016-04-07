@@ -24,8 +24,8 @@ public class SacsConfiguration {
 	 * @throws ConfigurationException
 	 */
 	public SacsConfiguration() throws ConfigurationException {
-		restConfig = new PropertiesConfiguration("rest.properties");
-		soapConfig = new PropertiesConfiguration("soap.properties");		
+		restConfig = new PropertiesConfiguration("SACSRestConfig.properties");
+		soapConfig = new PropertiesConfiguration("SACSSoapConfig.properties");		
 	}
 
 	/**

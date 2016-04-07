@@ -1,6 +1,6 @@
 # General
 ## Overview
-The Developer Essentials project has been created to give developers creating systems consuming Sabre WebServices some basic examples, code snippets, best practices or even small libraries they could use while developing their code. It shows how to chain simple calls into more complex business cases, where subsequent calls use data returned from the previous ones. The project focuses on such important issues like SOAP session pooling on the client side, or managing the REST authentication token. All the services used and showcased in this project employ the latest versions of the Sabre WebServices at the time of creating this project, that is:
+The Sabre API Code Samples project has been created to give developers creating systems consuming Sabre WebServices some basic examples, code snippets, best practices or even small libraries they could use while developing their code. It shows how to chain simple calls into more complex business cases, where subsequent calls use data returned from the previous ones. The project focuses on such important issues like SOAP session pooling on the client side, or managing the REST authentication token. All the services used and showcased in this project employ the latest versions of the Sabre WebServices at the time of creating this project, that is:
 
 - TravelItineraryRead – version 3.6.0
 - PassengersDetails – version 3.2.0
@@ -8,9 +8,9 @@ The Developer Essentials project has been created to give developers creating sy
 - EnhancedAirBook – version 3.2.0
 
 ## Building and configuring the application
-Before running the application, one should obtain credentials for SOAP and REST webservices. In order to do it, one should request access to SOAP using Sabre Dev Studio's contact form. Edit the Configuration's src/main/resources/soap.properties file with the credentials obtained from Sabre; they should be put into the username and password lines. As for now, the credentials are put in the properties file in the plain text to be able to quickly start using the application, but it is highly recommended, that those values are encrypted. The encryption/decryption is provided in the Configuration module of Sabre API Code Samples.
+Before running the application, one should obtain credentials for SOAP and REST webservices. In order to do it, one should request access to SOAP using Sabre Dev Studio's contact form. Edit the Configuration's src/main/resources/SACSSoapConfig.properties file with the credentials obtained from Sabre; they should be put into the username and password lines. As for now, the credentials are put in the properties file in the plain text to be able to quickly start using the application, but it is highly recommended, that those values are encrypted. The encryption/decryption is provided in the Configuration module of Sabre API Code Samples.
 
-As for REST, the credentials should be encrypted in just the same way as above, but put into the Configuration's src/main/resources/rest.properties file in the corresponding lines.
+As for REST, the credentials should be encrypted in just the same way as above, but put into the Configuration's src/main/resources/SACSRestConfig.properties file in the corresponding lines.
 
 Build the application using command line and Maven, running the
 `mvn clean install`
@@ -181,7 +181,7 @@ Other callbacks:
 Used to log messages, send faults to handle by error handler, and return sessions to the pool.
 
 ### Session pooling
-Session creation and closing can be expensive operation. Also, there is a session limit per user set on the server. In order to conserve time on client side and server resources, session pool has been introduced. The size of the pool is configurable in the soap.properties file in the Configuration module. The heart of this functionality is in the SessionPool class. It is responsible for making calls to open, destroy and refresh sessions that are being kept there. When the HeaderComposingCallback requests a session, it recursively looks up the list of sessions to find a free one and returns it, and if it doesn’t find one, it calls the SessionCreateRQ to create it, only if the pool has space for it. Otherwise, it keeps the call on hold until it can get a free session. When a workflow returns a session to the pool, the IgnoreTransactionRQ is being called, to make sure, the session on the server side is clean. Every ten minutes, the pool calls OTA_PingRQ on every session it keeps, to keep the sessions alive. The sessions are being closed, when the program exits, using an exit hook in the main configuration class (SoapApplicationConfiguration). The pool sends a SessionCloseRQ on every session, that it keeps.
+Session creation and closing can be expensive operation. Also, there is a session limit per user set on the server. In order to conserve time on client side and server resources, session pool has been introduced. The size of the pool is configurable in the SACSSoapConfig.properties file in the Configuration module. The heart of this functionality is in the SessionPool class. It is responsible for making calls to open, destroy and refresh sessions that are being kept there. When the HeaderComposingCallback requests a session, it recursively looks up the list of sessions to find a free one and returns it, and if it doesn’t find one, it calls the SessionCreateRQ to create it, only if the pool has space for it. Otherwise, it keeps the call on hold until it can get a free session. When a workflow returns a session to the pool, the IgnoreTransactionRQ is being called, to make sure, the session on the server side is clean. Every ten minutes, the pool calls OTA_PingRQ on every session it keeps, to keep the sessions alive. The sessions are being closed, when the program exits, using an exit hook in the main configuration class (SoapApplicationConfiguration). The pool sends a SessionCloseRQ on every session, that it keeps.
 
 ## Flow Trigger
 This module is used to run and demonstrate defined workflows using http calls. It’s being used by a small web page based on AngularJS and Bootstap.
@@ -199,3 +199,11 @@ One can use the below calls:
 	- InstaFlight (uses hypermedia link from the LeadPriceCalendar call)
 	- BargainFinderMax
 
+# Support
+
+- [Stack Overflow](http://stackoverflow.com/questions/tagged/sabre "Stack Overflow")
+- Need to report an issue/improvement? Use the built-in [issues] (https://github.com/SabreDevStudio/SACS-Java/issues) section
+- [Sabre Dev Studio](https://developer.sabre.com/)
+
+# Disclaimer of Warranty and Limitation of Liability
+This software and any compiled programs created using this software are furnished “as is” without warranty of any kind, including but not limited to the implied warranties of merchantability and fitness for a particular purpose. No oral or written information or advice given by Sabre, its agents or employees shall create a warranty or in any way increase the scope of this warranty, and you may not rely on any such information or advice. Sabre does not warrant, guarantee, or make any representations regarding the use, or the results of the use, of this software, compiled programs created using this software, or written materials in terms of correctness, accuracy, reliability, currentness, or otherwise. The entire risk as to the results and performance of this software and any compiled applications created using this software is assumed by you. Neither Sabre nor anyone else who has been involved in the creation, production or delivery of this software shall be liable for any direct, indirect, consequential, or incidental damages (including damages for loss of business profits, business interruption, loss of business information, and the like) arising out of the use of or inability to use such product even if Sabre has been advised of the possibility of such damages.
