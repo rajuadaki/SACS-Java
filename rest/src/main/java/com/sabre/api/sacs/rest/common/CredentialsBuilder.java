@@ -33,7 +33,7 @@ public class CredentialsBuilder {
             .append(":")
             .append(config.getRestProperty("domain"));
         
-        String secret = b64(config.getRestProperty("secret"));
+        String secret = b64(config.getRestProperty("clientSecret"));
         return b64(b64(credentials.toString()) + ":" + secret);
     }
     
