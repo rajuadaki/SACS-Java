@@ -62,9 +62,9 @@ public class SessionCreateHeaderCallback implements HeaderCallback {
 
         
         usernameToken.setDomain(configuration.getSoapProperty("domain"));
-        usernameToken.setOrganization(configuration.getSoapProperty("organization"));
-        usernameToken.setPassword(configuration.getSoapProperty("password"));
-        usernameToken.setUsername(configuration.getSoapProperty("username"));
+        usernameToken.setOrganization(configuration.getSoapProperty("group"));
+        usernameToken.setPassword(configuration.getSoapProperty("clientSecret"));
+        usernameToken.setUsername(configuration.getSoapProperty("userId"));
         security.setUsernameToken(usernameToken);
 
         return security;
