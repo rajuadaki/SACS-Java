@@ -2,7 +2,6 @@ package com.sabre.api.sacs.soap;
 
 import static org.springframework.ws.test.client.RequestMatchers.payload;
 import static org.springframework.ws.test.client.ResponseCreators.withSoapEnvelope;
-import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,9 +25,7 @@ import org.springframework.xml.transform.StringSource;
 import com.sabre.api.sacs.configuration.SacsConfiguration;
 import com.sabre.api.sacs.contract.travelitinerary.TravelItineraryReadRQ;
 import com.sabre.api.sacs.contract.travelitinerary.TravelItineraryReadRS;
-import com.sabre.api.sacs.soap.SoapApplicationConfiguration;
 import com.sabre.api.sacs.soap.common.GenericRequestWrapper;
-import com.sabre.api.sacs.soap.pool.SessionPool;
 import com.sabre.api.sacs.workflow.SharedContext;
 
 
@@ -41,9 +38,6 @@ public class TravelItineraryReadTest {
     
     @Autowired
     private SacsConfiguration configuration;
-
-    @Autowired
-    private SessionPool sessionPool;
 
     private SharedContext context = new SharedContext();
     

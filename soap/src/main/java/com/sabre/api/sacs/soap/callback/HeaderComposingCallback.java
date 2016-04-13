@@ -62,9 +62,8 @@ public class HeaderComposingCallback implements HeaderCallback {
 
         header = messageHeaderFactory.getMessageHeader(this.actionString);
         header.setConversationId(workflowContext.getConversationId());
-        header.setCPAId("");
         MessageData mData = new MessageData();
-        mData.setMessageId("");
+        mData.setMessageId("somemessageid");
         mData.setTimestamp((new Date()).toString());
         GregorianCalendar c = new GregorianCalendar();
         c.setTime(new Date());
@@ -77,7 +76,9 @@ public class HeaderComposingCallback implements HeaderCallback {
         mData.setTimeToLive(date2.normalize());
         header.setMessageData(mData);
         header.setDuplicateElimination("");
-        header.getDescription().add(new Description());
+        Description desc = new Description();
+        desc.setValue("somedescription");
+        header.getDescription().add(desc);
 
         if (creatingSession) {
             throw new UnsupportedOperationException("Legal for calls other than Session Create and Session Close.");

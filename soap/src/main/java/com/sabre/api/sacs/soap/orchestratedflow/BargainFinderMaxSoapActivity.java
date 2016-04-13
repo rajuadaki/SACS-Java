@@ -101,7 +101,7 @@ public class BargainFinderMaxSoapActivity implements Activity {
         //<POS>
         POSType pos = new POSType();
         SourceType srcType = new SourceType();
-        srcType.setPseudoCityCode(config.getSoapProperty("organization"));
+        srcType.setPseudoCityCode(config.getSoapProperty("group"));
         
         UniqueIDType uidType = new UniqueIDType();
         uidType.setType("1");

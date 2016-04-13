@@ -25,12 +25,14 @@ public class MessageHeaderFactory {
         MessageHeader header = new MessageHeader();
 
         header.setAction(actionString);
-        header.setCPAId(configuration.getSoapProperty("pcc"));
+        header.setCPAId(configuration.getSoapProperty("group"));
 
         header.setFrom(getFrom());
         header.setTo(getTo());
-
-        header.setService(new Service());
+        
+        Service service = new Service();
+        service.setValue(actionString);
+        header.setService(service);
 
         return header;
     }
