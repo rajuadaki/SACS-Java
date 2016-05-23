@@ -68,9 +68,9 @@ public class SessionPool {
     }
 
     public void destroy() throws InterruptedException {
-        do {
+        while (!available.isEmpty()) {
             sessionCloseCall.closeSession(available.take());
-        } while (!available.isEmpty());
+        }
     }
 
     /**

@@ -59,7 +59,7 @@ public class SessionCloseWrapper extends WebServiceGatewaySupport {
 
         SessionCloseRQ.POS pos = new SessionCloseRQ.POS();
         SessionCloseRQ.POS.Source source = new SessionCloseRQ.POS.Source();
-        source.setPseudoCityCode(configuration.getSoapProperty("pcc"));
+        source.setPseudoCityCode(configuration.getSoapProperty("group"));
         pos.setSource(source);
         requestBody.setPOS(pos);
 
